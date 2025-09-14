@@ -20,7 +20,6 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    // Read file into memory
     fseek(fp, 0, SEEK_END);
     long size = ftell(fp);
     fseek(fp, 0, SEEK_SET);
@@ -36,7 +35,6 @@ int main(int argc, char **argv) {
     source[size] = '\0';
     fclose(fp);
 
-    // Tokenize
     Token tokens[MAX_TOKENS];
     int token_count = 0;
 
@@ -49,11 +47,9 @@ int main(int argc, char **argv) {
         if (t.kind == TOK_EOF) break;
     }
 
-    // Parse (syntax checking / messages)
     Parser P = { tokens, token_count, 0 };
     parse_program(&P);
 
-    // Output: preview + token dump
     printf("TTS-CC Compiler v0.1\n");
     printf("Loaded source file: %s (%ld bytes)\n", input_path, size);
     printf("---- Source Preview ----\n%s\n------------------------\n", source);
@@ -64,13 +60,14 @@ int main(int argc, char **argv) {
                tok_name(t.kind), t.length, t.lexeme, t.line, t.col);
     }
 
-    // Compile C+ -> C++ -> EXE
     if (out_cpp_emitter(argc, argv) == 0) {
         if (compile_to_exe(tokens, token_count, "out.cpp", "out.exe") == 0) {
-            // Optional: run the program
-            int run_rc = system("out.exe");
+            int run_rc = system(".\\out.exe");
             if (run_rc != 0) {
                 fprintf(stderr, "TTS-CC: Running out.exe failed (rc=%d)\n", run_rc);
+                return 1;
+            }
+            return 0;
         }
     }
 
