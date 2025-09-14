@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     Parser P = { tokens, token_count, 0 };
     parse_program(&P);
 
-    printf("TTS-CC Compiler v0.1\n");
+    printf("TTS-CC C+ Compiler v0.1\n");
     printf("Loaded source file: %s (%ld bytes)\n", input_path, size);
     printf("---- Source Preview ----\n%s\n------------------------\n", source);
     printf("---- Token Stream ----\n");
